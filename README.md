@@ -10,8 +10,10 @@ Part of the [Hackita](https://hackita.it) offensive security project.
 
 1. Your XSS payload loads `myexfilxss.js` in the victim's browser.
 2. The script sends a `GET` to an internal URL (reachable only from the victim's machine, e.g. `http://127.0.0.1:4566/`).
-3. The response is encoded with `btoa` and sent to your listener with one `POST` (`Content-Type: text/plain`, so no CORS preflight).
+3. The response is read as raw bytes, encoded in base64 and sent to your listener with one `POST` (`Content-Type: text/plain`, so no CORS preflight).
 4. You decode the body with `base64 -d`.
+
+It works with any content type: html, json, js, php output, zip, exe, images. Nothing is corrupted because the response is never decoded as text.
 
 ## Setup
 
@@ -45,12 +47,14 @@ Load it through the XSS (for example in a header or field that gets rendered to 
 Decode what arrives (the base64 is the body, after the empty line of the POST request):
 
 ```bash
-echo 'BASE64_BODY' | base64 -d > response.html
+echo 'BASE64_BODY' | base64 -d > response.bin
 ```
+
+Use the extension that matches the content (`.html`, `.json`, `.zip`, `.exe`...).
 
 ## Limitations
 
-- `btoa` fails on characters outside Latin-1. If the response contains them, the POST is never sent.
+- You only get what the server returns: for a PHP page that is its output, not its source code.
 - The internal service must answer a plain `GET` without extra headers or authentication.
 - Mixed content and CSP on the victim's page can block the request.
 
